@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WellPath — small steps, stronger days</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar"><div class="brand"><span class="logo">✦</span><span>WellPath</span></div><span class="privacy">Private by design · saved in this browser</span></header>
+  <main>
+    <section class="hero"><div><p class="eyebrow">YOUR HEALTH, YOUR PATH</p><h1>Small steps.<br><em>Stronger days.</em></h1><p class="hero-copy">A friendly AI wellness coach for students — helping you notice what you eat, move with confidence, and keep going.</p></div><div class="hero-art" aria-hidden="true"><div class="sun"></div><div class="hill hill-one"></div><div class="hill hill-two"></div><span class="sprout">⌁</span></div></section>
+
+    <section class="stats"><div><span>ACTIVE MINUTES</span><strong id="activeMinutes">0</strong><small>today</small></div><div><span>MEALS LOGGED</span><strong id="mealCount">0</strong><small>in your path</small></div><div><span>YOUR NEXT STEP</span><strong class="next-step">Be kind to yourself</strong><small>progress over perfection</small></div></section>
+
+    <section class="grid">
+      <article class="card meal-card"><div class="card-heading"><div><p class="eyebrow">01 · FUEL</p><h2>What did you eat?</h2></div><span class="card-icon">☼</span></div><p class="muted">No judgment here — just a moment to notice and celebrate.</p><form id="mealForm" class="inline-form"><input id="mealInput" required maxlength="100" placeholder="e.g. yogurt and a banana" /><button>Get feedback</button></form><div id="mealFeedback" class="feedback" hidden></div></article>
+      <article class="card move-card"><div class="card-heading"><div><p class="eyebrow">02 · MOVE</p><h2>Log your movement</h2></div><span class="card-icon">↗</span></div><p class="muted">Every minute counts. Choose movement that feels right for you.</p><form id="exerciseForm" class="exercise-form"><input id="exerciseInput" required maxlength="80" placeholder="What did you do?" /><input id="minutesInput" required min="1" max="600" type="number" placeholder="Minutes" /><button>Log it</button></form><p id="exerciseNotice" class="notice" hidden></p></article>
+    </section>
+
+    <section class="plan card"><div class="card-heading"><div><p class="eyebrow">03 · YOUR WEEK</p><h2>A plan made for you</h2><p class="muted">Ask the AI for a simple week of meals and movement.</p></div><button id="planButton" class="secondary">Make my plan</button></div><div id="planOutput" class="plan-output"><div class="plan-placeholder">Your plan will appear here — realistic, flexible, and yours.</div></div></section>
+
+    <section class="ask card"><div class="ask-heading"><div><p class="eyebrow">04 · ASK WELLPath AI</p><h2>Have a real question?</h2><p class="muted">Get a clear, gentle starting point. WellPath is not a doctor or medical service.</p></div><div class="pulse">✦</div></div><form id="askForm" class="ask-form"><input id="askInput" required maxlength="500" placeholder="e.g. How can I get more energy for school?" /><button id="askButton">Ask WellPath AI</button></form><div id="askStatus" class="ask-status" role="status"></div><div id="askOutput" class="answer" hidden></div></section>
+    <p class="safety"><strong>Take care of yourself.</strong> If you feel faint, very weak, have trouble breathing, or feel seriously unwell, stop and tell a trusted adult. Seek medical help when needed.</p>
+  </main>
+  <footer>WELLPATH · VERSION 1 <span>Saves on this computer only for now</span></footer>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
