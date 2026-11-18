@@ -1,5 +1,6 @@
-import fs from 'node:fs/promises';
 import https from 'node:https';
+import fs from 'node:fs/promises';
+import { getKey, invalidateKey } from './getKey.mjs';
 
 function postJson(url, headers, body) {
   return new Promise((resolve, reject) => {
@@ -15,14 +16,6 @@ function postJson(url, headers, body) {
   });
 }
 
-function readEnvKey() {
-  const text = fs.readFile('.env', 'utf8');
-  return text.then((contents) => {
-    const line = contents.split(/\r?\n/).find((item) => item.startsWith('OPENAI_API_KEY='));
-    return line?.slice('OPENAI_API_KEY='.length).trim();
-  });
-}
-
 async function readModel() {
   const notes = await fs.readFile('NOTES.md', 'utf8');
   return notes.match(/gpt-[\w.-]*luna[\w.-]*/i)?.[0] || 'gpt-5.6-luna';
@@ -34,15 +27,29 @@ async function readInstructions() {
 }
 
 export async function askOpenAI(userMessage) {
-  const [apiKey, model, instructions] = await Promise.all([readEnvKey(), readModel(), readInstructions()]);
-  if (!apiKey || apiKey === 'paste-your-key-here') throw new Error('missing-key');
+  const [model, instructions] = await Promise.all([readModel(), readInstructions()]);
+  let apiKey = await getKey();
+  let response = await callOpenAI(apiKey, model, instructions, userMessage);
 
-  const response = await postJson('https://api.openai.com/v1/responses', {
+  if (response.status === 401 || response.status === 403) {
+    invalidateKey();
+    apiKey = await getKey();
+    response = await callOpenAI(apiKey, model, instructions, userMessage);
+  }
+
+  if (!response.ok) {
+    throw Object.assign(new Error('I could not get an AI answer right now.'), {
+      fix: `OpenAI request failed (HTTP ${response.status}).`
+    });
+  }
+
+  const data = await response.json();
+  return data.output_text?.trim() || data.output?.flatMap((item) => item.content || []).map((part) => part.text || '').join('').trim() || 'I could not make a helpful answer this time.';
+}
+
+function callOpenAI(apiKey, model, instructions, userMessage) {
+  return postJson('https://api.openai.com/v1/responses', {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${apiKey}`
   }, JSON.stringify({ model, instructions, input: userMessage, max_output_tokens: 350 }));
-
-  if (!response.ok) throw new Error(`openai-${response.status}`);
-  const data = await response.json();
-  return data.output_text?.trim() || data.output?.flatMap((item) => item.content || []).map((part) => part.text || '').join('').trim() || 'I could not make a helpful answer this time.';
 }

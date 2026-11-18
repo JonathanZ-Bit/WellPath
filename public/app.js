@@ -12,7 +12,11 @@ function refreshStats() {
 async function ask(message) {
   const response = await fetch('/api/ask', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message }) });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'The AI could not answer.');
+  if (!response.ok) {
+    const error = new Error(data.error?.message || 'The AI could not answer.');
+    error.fix = data.error?.fix;
+    throw error;
+  }
   return data.answer;
 }
 
@@ -27,7 +31,7 @@ $('mealForm').addEventListener('submit', async (event) => {
     const answer = await ask(`The student logged this meal: “${meal}”. Give a few sentences of encouraging, student-friendly feedback. Mention one helpful food or movement idea and ask gently if they are feeling okay. Never shame food or make medical claims.`);
     $('mealFeedback').textContent = answer;
     state.meals.push({ id: crypto.randomUUID(), name: meal, createdAt: new Date().toISOString() }); saveWellPath(state); refreshStats(); input.value = '';
-  } catch { $('mealFeedback').textContent = 'I could not connect right now. Please check the key in .env and try again.'; }
+  } catch (error) { $('mealFeedback').textContent = error.message; }
   button.disabled = false; button.textContent = 'Get feedback';
 });
 
@@ -41,14 +45,14 @@ $('planButton').addEventListener('click', async (event) => {
   try {
     const answer = await ask('Make a simple, student-friendly 7-day plan with one encouraging meal idea and one gentle movement idea for each day. Keep it flexible, do not prescribe calories, and include a reminder to rest and ask a trusted adult for help if someone feels faint or very weak. Format each day as: Day: Meal — Movement.');
     $('planOutput').innerHTML = `<div class="answer plan-answer">${answer.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
-  } catch { $('planOutput').innerHTML = '<div class="plan-placeholder">I could not connect right now. Please check the key in .env and try again.</div>'; }
+  } catch (error) { $('planOutput').innerHTML = `<div class="plan-placeholder">${error.message}</div>`; }
   button.disabled = false; button.textContent = 'Make my plan';
 });
 
 $('askForm').addEventListener('submit', async (event) => {
   event.preventDefault(); const input = $('askInput'); const button = $('askButton'); const status = $('askStatus'); const output = $('askOutput');
   button.disabled = true; button.textContent = 'Thinking…'; status.textContent = 'WellPath is thinking…'; output.hidden = true;
-  try { output.textContent = await ask(input.value.trim()); output.hidden = false; status.textContent = ''; } catch { status.textContent = 'I could not connect right now. Please check the key in .env and try again.'; }
+  try { output.textContent = await ask(input.value.trim()); output.hidden = false; status.textContent = ''; } catch (error) { status.textContent = error.message; }
   button.disabled = false; button.textContent = 'Ask WellPath AI';
 });
 

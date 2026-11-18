@@ -1,6 +1,6 @@
 # WellPath notes
 
-OpenAI model with “luna” in its name: `gpt-5.6-luna`
+OpenAI model with “luna” in its name (from `getKey()`): `gpt-5.6-luna`
 
 ## How to run
 
@@ -19,6 +19,7 @@ Then open http://127.0.0.1:3000 in a browser.
 - AI-made weekly meal and movement plan.
 - AI question box with friendly safety messaging.
 - Server-side API call so the key stays in `.env`.
+- The AI key comes from `getKey()` in the server-only `server/getKey.mjs` helper.
 - Browser-only saving through `public/storage.js` with sample items.
 - `.env` is ignored by Git.
 - Saves on this computer only for now.
@@ -39,3 +40,11 @@ Then open http://127.0.0.1:3000 in a browser.
 
 - Test the four MVP flows in the browser and record a short demo video.
 - Add a database only when browser-only saving is no longer enough.
+
+## Put online with Vercel
+
+- Vercel serves the page through `vercel.json` and runs `api/ask.mjs` as the small server function.
+- Import this GitHub project into Vercel. No build command or output directory is needed.
+- Add `KEYGEN_URL` and `KEYGEN_TOKEN` in Vercel Project Settings → Environment Variables for Production, Preview, and Development as needed.
+- Online, `getKey()` reads only those Vercel environment variables. Locally, `npm start` keeps using `.env`.
+- No other Vercel setting is required. Saving remains in each browser's localStorage.

@@ -30,8 +30,9 @@ const server = http.createServer(async (req, res) => {
     const body = await readFile(filePath);
     send(res, 200, body, mime[path.extname(filePath)] || 'text/plain');
   } catch (error) {
-    const apiProblem = error.message === 'missing-key' || error.message.startsWith('openai-');
-    send(res, apiProblem ? 502 : 500, { error: apiProblem ? 'I could not connect right now. Please check the key in .env and try again.' : 'Something went wrong. Please try again.' });
+    const fix = error.fix || 'Check the server logs for details.';
+    console.error(fix);
+    send(res, 502, { error: { message: error.message || 'Something went wrong. Please try again.', fix } });
   }
 });
 
