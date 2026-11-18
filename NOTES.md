@@ -43,8 +43,12 @@ Then open http://127.0.0.1:3000 in a browser.
 
 ## Put online with Vercel
 
-- Vercel serves the page through `vercel.json` and runs `api/ask.mjs` as the small server function.
-- Import this GitHub project into Vercel. No build command or output directory is needed.
-- Add `KEYGEN_URL` and `KEYGEN_TOKEN` in Vercel Project Settings → Environment Variables for Production, Preview, and Development as needed.
-- Online, `getKey()` reads only those Vercel environment variables. Locally, `npm start` keeps using `.env`.
+- Import this GitHub repository into Vercel with the default project root.
+- Vercel uses `vercel.json` to serve the files in `public/` and runs `api/ask.mjs` as the server function for `POST /api/ask`.
+- Leave Build Command and Output Directory blank; no framework preset or build step is needed.
+- In Vercel Project Settings → Environment Variables, add `KEYGEN_URL` and `KEYGEN_TOKEN` for every environment that should work (Production, Preview, and/or Development).
+- Online, `getKey()` reads only the Vercel environment variables named `KEYGEN_URL` and `KEYGEN_TOKEN`; the OpenAI key is fetched server-side and is never sent to the browser.
+- Locally, `npm start` keeps using the ignored `.env` file so the same app can be tested on this computer.
 - No other Vercel setting is required. Saving remains in each browser's localStorage.
+
+The local production-style check passed on November 18, 2026: `/` returned 200 and a real `POST /api/ask` request returned an AI answer.
