@@ -30,6 +30,7 @@ Then open http://127.0.0.1:3000 in a browser.
 - Status: fully working.
 - Try it: run `npm start`, open `http://127.0.0.1:3000`, type a meal in “What did you eat?”, and choose “Get feedback.”
 - The AI reply appears in the meal card, and the meal is saved in this browser after the reply succeeds.
+- Meal feedback now includes clear “Add more of” and “You do not need to add right now” guidance without strict diet rules.
 
 ## Maybe Later
 

@@ -28,7 +28,7 @@ $('mealForm').addEventListener('submit', async (event) => {
   button.disabled = true; button.textContent = 'Thinking…';
   $('mealFeedback').hidden = false; $('mealFeedback').textContent = 'Thinking about your win…';
   try {
-    const answer = await ask(`The student logged this meal: “${meal}”. Give a few sentences of encouraging, student-friendly feedback. Mention one helpful food or movement idea and ask gently if they are feeling okay. Never shame food or make medical claims.`);
+    const answer = await ask(`The student logged this meal: “${meal}”. Give a few sentences of encouraging, student-friendly feedback. Use these two clear labels: “Add more of:” with one or two helpful food groups or simple ideas, and “You do not need to add right now:” with one reassuring note about what is already okay or not necessary to chase from one meal. Explain that this is a gentle next step, not a diagnosis or a strict rule. Ask gently if they are feeling okay. Never shame food, prescribe calories, or make medical claims.`);
     $('mealFeedback').textContent = answer;
     state.meals.push({ id: crypto.randomUUID(), name: meal, createdAt: new Date().toISOString() }); saveWellPath(state); refreshStats(); input.value = '';
   } catch (error) { $('mealFeedback').textContent = error.message; }
