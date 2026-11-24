@@ -25,6 +25,12 @@ Then open http://127.0.0.1:3000 in a browser.
 - Saves on this computer only for now.
 - Verified in the browser: meal feedback, exercise total, weekly plan, and safe question answer all work with the real AI.
 
+## MVP feature check: meal feedback
+
+- Status: fully working.
+- Try it: run `npm start`, open `http://127.0.0.1:3000`, type a meal in “What did you eat?”, and choose “Get feedback.”
+- The AI reply appears in the meal card, and the meal is saved in this browser after the reply succeeds.
+
 ## Maybe Later
 
 - The user can tap I feel faint to get rest and medical help steps.
